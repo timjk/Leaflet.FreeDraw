@@ -340,6 +340,9 @@ module.exports = function(L) {
             this._attachMouseMove();
             this._attachMouseUpLeave();
 
+            // Attach custom listeners
+            this.attachListeners(this.map);
+
             // Set the default mode.
             this.setMode(this.mode);
 
