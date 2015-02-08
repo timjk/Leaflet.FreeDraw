@@ -1461,7 +1461,7 @@ module.exports = function(L) {
 
             this.map.on('mouseup touchend', completeAction);
 
-            var element = $window.document.getElementsByTagName('body')[0];
+            var element = document.getElementsByTagName('body')[0];
             element.onmouseleave = completeAction;
 
         },
@@ -1601,12 +1601,12 @@ module.exports = function(L) {
             if (path.substr(0, 7) === 'http://' || path.substr(0, 8) === 'https://') {
 
                 // Use developer supplied full URL since we've received a FQDN.
-                $window.console.error(path);
+                console.error(path);
 
             } else {
 
                 // Output a link for a more informative message in the EXCEPTIONS.md.
-                $window.console.error('See: https://github.com/Wildhoney/Leaflet.FreeDraw/blob/master/EXCEPTIONS.md#' + path);
+                console.error('See: https://github.com/Wildhoney/Leaflet.FreeDraw/blob/master/EXCEPTIONS.md#' + path);
 
             }
         }

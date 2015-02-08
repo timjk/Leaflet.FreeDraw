@@ -273,13 +273,6 @@ Options.prototype = {
         // Resolve the hull algorithm.
         algorithm = this.hullAlgorithms[algorithm];
 
-        if (typeof $window[algorithm.global] === 'undefined') {
-
-            // Ensure hull algorithm module has been included.
-            L.FreeDraw.Throw(algorithm.name + ' is a required library for concave/convex hulls', algorithm.link);
-
-        }
-
         this.hullAlgorithm = algorithm.method;
 
     }
