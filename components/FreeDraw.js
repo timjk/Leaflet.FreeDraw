@@ -828,6 +828,8 @@ module.exports = function(L) {
                 this.memory.save(this.getPolygons(true));
             }
 
+            this.map.fire('freedraw:polygonCreated', polygon);
+
             return polygon;
 
         },
