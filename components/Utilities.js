@@ -1,70 +1,67 @@
-(function() {
 
-    "use strict";
+"use strict";
+
+/**
+ * @module FreeDraw
+ * @submodule Utilities
+ * @author Adam Timberlake
+ * @link https://github.com/Wildhoney/Leaflet.FreeDraw
+ */
+module.exports = {
 
     /**
-     * @module FreeDraw
-     * @submodule Utilities
-     * @author Adam Timberlake
-     * @link https://github.com/Wildhoney/Leaflet.FreeDraw
+     * Responsible for converting the multiple polygon points into a MySQL object for
+     * geo-spatial queries.
+     *
+     * @method getMySQLMultiPolygon
+     * @param latLngGroups {Array}
+     * @return {String}
      */
-    L.FreeDraw.Utilities = {
+    getMySQLMultiPolygon: function getMySQLMultiPolygon(latLngGroups) {
 
-        /**
-         * Responsible for converting the multiple polygon points into a MySQL object for
-         * geo-spatial queries.
-         *
-         * @method getMySQLMultiPolygon
-         * @param latLngGroups {Array}
-         * @return {String}
-         */
-        getMySQLMultiPolygon: function getMySQLMultiPolygon(latLngGroups) {
+        var groups = [];
 
-            var groups = [];
+        latLngGroups.forEach(function forEach(latLngs) {
 
-            latLngGroups.forEach(function forEach(latLngs) {
+            var group = [];
 
-                var group = [];
-
-                latLngs.forEach(function forEach(latLng) {
-                    group.push(latLng.lng + ' ' + latLng.lat);
-                });
-
-                groups.push('((' + group.join(',') + '))');
-
+            latLngs.forEach(function forEach(latLng) {
+                group.push(latLng.lng + ' ' + latLng.lat);
             });
 
-            return 'MULTIPOLYGON(' + groups.join(',') + ')';
+            groups.push('((' + group.join(',') + '))');
 
-        },
+        });
 
-        /**
-         * Responsible to generating disparate MySQL polygons from the lat/long boundaries.
-         *
-         * @method getMySQLPolygons
-         * @param latLngGroups {L.LatLng[]}
-         * @returns {Array}
-         */
-        getMySQLPolygons: function getMySQLPolygons(latLngGroups) {
+        return 'MULTIPOLYGON(' + groups.join(',') + ')';
 
-            var groups = [];
+    },
 
-            latLngGroups.forEach(function forEach(latLngs) {
+    /**
+     * Responsible to generating disparate MySQL polygons from the lat/long boundaries.
+     *
+     * @method getMySQLPolygons
+     * @param latLngGroups {L.LatLng[]}
+     * @returns {Array}
+     */
+    getMySQLPolygons: function getMySQLPolygons(latLngGroups) {
 
-                var group = [];
+        var groups = [];
 
-                latLngs.forEach(function forEach(latLng) {
-                    group.push(latLng.lng + ' ' + latLng.lat);
-                });
+        latLngGroups.forEach(function forEach(latLngs) {
 
-                groups.push('POLYGON((' + group.join(',') + '))');
+            var group = [];
 
+            latLngs.forEach(function forEach(latLng) {
+                group.push(latLng.lng + ' ' + latLng.lat);
             });
 
-            return groups;
+            groups.push('POLYGON((' + group.join(',') + '))');
 
-        }
+        });
 
-    };
+        return groups;
 
-})();
+    }
+
+};

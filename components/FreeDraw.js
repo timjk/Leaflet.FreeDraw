@@ -1,6 +1,13 @@
-(function($window, L, d3, ClipperLib) {
+"use strict";
+var d3 = require('d3');
+var ClipperLib = require('js-clipper');
 
-    "use strict";
+var Hull = require('./Hull');
+var Options = require('./Options');
+var Memory = require('./Memory');
+var Utilities = require('./Utilities');
+
+module.exports = function(L) {
 
     /**
      * @method freeDraw
@@ -58,7 +65,8 @@
          * @property lineFunction
          * @type {Function}
          */
-        lineFunction: function() {},
+        lineFunction: function () {
+        },
 
         /**
          * Responsible for holding an array of latitudinal and longitudinal points for generating
@@ -184,17 +192,18 @@
             }
 
             // Reset all of the properties.
-            this.fromPoint = { x: 0, y: 0 };
-            this.polygons  = [];
-            this.edges     = [];
-            this.hull      = {};
-            this.latLngs   = [];
+            this.fromPoint = {x: 0, y: 0};
+            this.polygons = [];
+            this.edges = [];
+            this.hull = {};
+            this.latLngs = [];
 
             options = options || {};
 
-            this.memory  = new L.FreeDraw.Memory();
-            this.options = new L.FreeDraw.Options();
-            this.hull    = new L.FreeDraw.Hull();
+            this.memory = new Memory(L);
+            this.options = new Options(L);
+            this.hull = new Hull(L);
+            this.utilities = Utilities;
             this.element = options.element || null;
 
             this.setMode(options.mode || this.mode);
@@ -245,7 +254,7 @@
              */
             var recreate = function recreate(polygon) {
 
-                setTimeout(function() {
+                setTimeout(function () {
 
                     this.silently(function silently() {
 
@@ -295,13 +304,13 @@
             }.bind(this));
 
             // Lazily hook up the options and hull objects.
-            this.map  = map;
+            this.map = map;
             this.mode = this.mode || L.FreeDraw.MODES.VIEW;
 
             // Memorise the preferences so we know how to revert.
             this.defaultPreferences = {
-                dragging:        map.dragging._enabled,
-                touchZoom:       map.touchZoom._enabled,
+                dragging: map.dragging._enabled,
+                touchZoom: map.touchZoom._enabled,
                 doubleClickZoom: map.doubleClickZoom._enabled,
                 scrollWheelZoom: map.scrollWheelZoom._enabled
             };
@@ -354,7 +363,7 @@
         silently: function silently(callbackFn) {
 
             var silentBefore = this.silenced;
-            this.silenced      = true;
+            this.silenced = true;
             callbackFn.apply(this);
 
             if (!silentBefore) {
@@ -364,7 +373,7 @@
                 this.silenced = false;
 
             }
-            
+
         },
 
         /**
@@ -751,7 +760,7 @@
 
                 latLngs = function simplifyPolygons() {
 
-                    var points   = ClipperLib.Clipper.CleanPolygon(this.latLngsToClipperPoints(latLngs), 1.1),
+                    var points = ClipperLib.Clipper.CleanPolygon(this.latLngsToClipperPoints(latLngs), 1.1),
                         polygons = ClipperLib.Clipper.SimplifyPolygon(points, ClipperLib.PolyFillType.pftNonZero);
 
                     return this.clipperPolygonsToLatLngs(polygons);
@@ -1335,7 +1344,7 @@
 
                 originalEvent.preventDefault();
 
-                this.latLngs   = [];
+                this.latLngs = [];
                 this.fromPoint = this.map.latLngToContainerPoint(event.latlng);
 
                 if (this.mode & L.FreeDraw.MODES.CREATE) {
@@ -1604,6 +1613,5 @@
         throw "Leaflet.FreeDraw: " + message + ".";
 
     };
-
-})(window, window.L, window.d3, window.ClipperLib);
+}
 
