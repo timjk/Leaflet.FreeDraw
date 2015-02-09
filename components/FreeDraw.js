@@ -832,8 +832,8 @@ module.exports = function(L) {
             }
 
             this.map.fire('freedraw:polygonCreated', {
-								polygon: polygon
-						});
+                polygon: polygon
+            });
 
             return polygon;
 
