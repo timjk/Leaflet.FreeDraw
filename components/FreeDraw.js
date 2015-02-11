@@ -831,10 +831,6 @@ module.exports = function(L) {
                 this.memory.save(this.getPolygons(true));
             }
 
-            this.map.fire('freedraw:polygonCreated', {
-                polygon: polygon
-            });
-
             return polygon;
 
         },
@@ -1564,6 +1560,10 @@ module.exports = function(L) {
             if (!polygon) {
                 return;
             }
+
+            this.map.fire('freedraw:polygonCreated', {
+                polygon: polygon
+            });
 
             this.latLngs = [];
 
